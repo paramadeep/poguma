@@ -19,3 +19,7 @@ div.qa{
 }
 
 
+paper-progress::shadow  #activeProgress{
+  background-color: #208507;
+}
+
