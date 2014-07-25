@@ -8,7 +8,7 @@ exports.index = function(req, res){
 exports.cards =function(req, res){
 
   var response;
-  var mingle_query="select 'name','Story Status','number','Estimate','QA Estimate' where 'Story Status' >= 'Ready for Development' and 'Story Status' < 'Ready for Signoff' and 'Planned Release' = (Current Release)";
+  var mingle_query="select 'name','Story Status','number','Estimate','QA Estimate','Development Started On','Development Completed On','QA Started on','QA Completed on' where 'Story Status' >= 'Ready for Development' and 'Story Status' < 'Ready for Signoff' and 'Planned Release' = (Current Release)";
   res.set({
     'Content-Type': 'application/json',
   });
@@ -32,7 +32,6 @@ function clean_up_data(cards){
       'dev_effort': get_dev_effort(card)
     };
   });
-  debugger;
 
   return clean_data;
 };
@@ -45,7 +44,16 @@ function get_qa_effort(card){
 }
 
 function get_dev_effort(card){
- return card['Estimate']!= null ? parseInt(card['Estimate']) : 0;
+  var estimate=parseInt(card['Estimate']);
+  var status=card['Story Status'];
+  if(status== 'Ready For Development'){
+    return estimate;
+  }
+  if(status== 'Development In Progress'){
+    effort=(Math.abs(new Date()- new Date(card['Development Started On'])))/(1000*24*60*60);
+    return estimate < effort  ? 1: estimate-effort;
+  }
+  return 0;
 }
 
 
