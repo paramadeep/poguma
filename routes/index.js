@@ -1,3 +1,4 @@
+
 /* GET home page. */
 exports.index = function(req, res){
   var self = this;
@@ -39,7 +40,14 @@ function clean_up_data(cards){
 
 function get_qa_effort(card){
   var qa_scale= {'Simple': 1, 'Medium': 2, 'Complex': 3};
-  return card['QA Estimate']!= null ? qa_scale[card['QA Estimate']] : 0;
+  var status=card['Story Status'];
+  var estimate=card['QA Estimate']!= null ? qa_scale[card['QA Estimate']] : 0;
+
+  if(status=='In QA'){
+    var effort=(Math.abs(new Date()- new Date(card['QA Started on'])))/(1000*24*60*60);
+    return estimate < effort  ? 1: estimate-effort;
+  }
+  return estimate;
 
 }
 
