@@ -44,7 +44,7 @@ function get_qa_effort(card){
   var estimate=card['QA Estimate']!= null ? qa_scale[card['QA Estimate']] : 0;
 
   if(status=='In QA'){
-    var effort=(Math.abs(new Date()- new Date(card['QA Started on'])))/(1000*24*60*60);
+    var effort= get_effort(card['QA Started on']);
     return estimate < effort  ? 1: estimate-effort;
   }
   return estimate;
@@ -58,11 +58,21 @@ function get_dev_effort(card){
     return estimate;
   }
   if(status== 'Development In Progress'){
-    effort=(Math.abs(new Date()- new Date(card['Development Started On'])))/(1000*24*60*60);
+    var effort= get_effort(card['Development Started On']);
+    
     return estimate < effort  ? 1: estimate-effort;
   }
   return 0;
 }
 
 
-
+function get_effort(start_date){
+    var today=new Date();
+    var iterator_date= new Date(start_date);
+    var effort_spent=0;
+    while(iterator_date<=today){
+      effort_spent = (iterator_date.getDay()<=5) ? effort_spent+1 : effort_spent+0;
+      iterator_date.setDate(iterator_date.getDate()+1);
+    }
+  return effort_spent;
+}
