@@ -23,7 +23,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(app.router);
 
 app.get('/', routes.index);
-app.get('/cards', routes.cards);
+app.get('/card_details', routes.cards);
 
 /// catch 404 and forwarding to error handler
 app.use(function(req, res, next) {

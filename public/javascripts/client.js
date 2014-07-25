@@ -1,6 +1,6 @@
 console.log("vandiruchi");
 
-$.get("/cards",function(data){
+$.get("/card_details",function(data){
 
   var cards=d3.select("#chart")
     .selectAll("div")
