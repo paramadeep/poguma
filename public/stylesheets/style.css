@@ -17,9 +17,22 @@ div.qa{
   color: white;
   display: inline-block;
 }
+#chart{
+  background-color: aliceblue;
+}
+
 
 
 paper-progress::shadow  #activeProgress{
   background-color: #208507;
+}
+
+.qa_in_progress{
+  background-color: rgb(33, 192, 206);
+}
+
+
+.dev_in_progress{
+  background-color: rgb(150, 197, 119);
 }
 
