@@ -2,6 +2,10 @@ extends layout
 
 block content
   h1= title
+    div#legend
+      div.dev_in_progress.dev_in_progress_legend
+      div.qa_in_progress.qa_in_progress_legend
+      div.warning.warning_legend
   div#chart
     paper-progress(value=100)
 

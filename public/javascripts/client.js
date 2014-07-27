@@ -2,6 +2,7 @@ console.log("vandiruchi");
 
 // Timeline Options
 var options = {
+  'stackEvents': true,
   'width':  '100%',
   'editable': true, // make the events dragable
   'style': 'box',
@@ -9,7 +10,8 @@ var options = {
   'start': "07-01-2014",
   'zoomMin': 86400000,
   'zoomable': false,
-  'scale': links.Timeline.StepDate.SCALE.MONTH,
+  'scale': links.Timeline.StepDate.SCALE.WEEKDAY,
+  'showNavigation': true,
 };
 var timeline = new links.Timeline(document.getElementById('chart'),options);
 
@@ -29,6 +31,9 @@ function render_page(){
       if(card.qa_effort > 0){
         date.setDate(date.getDate()+card.qa_effort);
         card['className']= card['className']+' qa_in_progress';
+      }
+       if(card.qa_effort == 0 && card.dev_effort==0){
+        card['className']= card['className']+'warning';
       }
       card['start']=  Date.parse(date);
       card['content']=card.number;
