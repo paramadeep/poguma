@@ -1,45 +1,34 @@
-console.log("vandiruchi");
 
 // Timeline Options
 var options = {
-  'stackEvents': true,
-  'width':  '100%',
-  'editable': true, // make the events dragable
-  'style': 'box',
-  'intervalMax': 1000 * 60 * 60 * 24 * 90,
-  'start': "07-01-2014",
-  'zoomMin': 86400000,
-  'zoomable': false,
-  'scale': links.Timeline.StepDate.SCALE.WEEKDAY,
-  'showNavigation': true,
+  width:  "100%",
+  //height: "300px",
+  height: "auto",
+  layout: "box",
+  editable: true,
+  eventMargin: 5,  // minimal margin between events
+  eventMarginAxis: 0, // minimal margin beteen events and the axis
+  showMajorLabels: false,
+  axisOnTop: true,
+  // groupsWidth : "200px",
+  groupsChangeable : true,
+  groupsOnRight: false,
+  stackEvents: false  
 };
 var timeline = new links.Timeline(document.getElementById('chart'),options);
 
+function format_card_date(card){
+ card.start = new Date(card.start);
+      card.end = new Date(card.end);
+      return card;
+
+}
 
 function render_page(){
   $.get("/card_details",function(cards){
     console.log("inside");
-    var data = [];
-
-    cards.forEach(function(card){
-      var date=new Date();
-      card['className']='';
-      if(card.dev_effort > 0){
-        date.setDate(date.getDate()+card.dev_effort);
-        card['className']= 'dev_in_progress';
-      }
-      if(card.qa_effort > 0){
-        date.setDate(date.getDate()+card.qa_effort);
-        card['className']= card['className']+' qa_in_progress';
-      }
-       if(card.qa_effort == 0 && card.dev_effort==0){
-        card['className']= card['className']+'warning';
-      }
-      card['start']=  Date.parse(date);
-      card['content']=card.number;
-      timeline.addItem(card);
-
-    });
+    cards = cards.map(format_card_date) ;
+    timeline.draw(cards); 
   });
 };
 

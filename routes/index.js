@@ -1,3 +1,4 @@
+var moment = require('moment');
 
 /* GET home page. */
 exports.index = function(req, res){
@@ -26,53 +27,51 @@ exports.cards =function(req, res){
 
 function clean_up_data(cards){
   var clean_data=cards.map(function(card){
-    return {
-      'name': card.Name, 
-      'number': card.Number,
-      'qa_effort': get_qa_effort(card),
-      'dev_effort': get_dev_effort(card)
-    };
+    qa_date_range = get_qa_date_range(card);
+    dev_date_range = get_dev_date_range(card);
+    return [
+  {
+    start: dev_date_range.start,
+      end: dev_date_range.end,
+      content: card.Name,
+      group: card.Number,
+      className: 'dev_in_progress'
+  },
+      {
+        start: qa_date_range.start,
+      end: qa_date_range.end,
+      content: card.Name,
+      group: card.Number,
+      className: 'qa_in_progress'
+      }
+  ];
   });
-
-  return clean_data;
+ var final_data = [];
+  return final_data.concat.apply(final_data,clean_data);
 };
 
 
-function get_qa_effort(card){
-  var qa_scale= {'Simple': 1, 'Medium': 2, 'Complex': 3};
-  var status=card['Story Status'];
-  var estimate=card['QA Estimate']!= null ? qa_scale[card['QA Estimate']] : 0;
-
-  if(status=='In QA'){
-    var effort= get_effort(card['QA Started on']);
-    return estimate < effort  ? 1: estimate-effort;
-  }
-  return estimate;
-
+function get_qa_date_range(card){
+  return {start: getDate(5) , end: getDate(6) }
 }
 
-function get_dev_effort(card){
-  var estimate=parseInt(card['Estimate']);
-  var status=card['Story Status'];
-  if(status== 'Ready For Development'){
-    return estimate;
-  }
-  if(status== 'Development In Progress'){
-    var effort= get_effort(card['Development Started On']);
-    
-    return estimate < effort  ? 1: estimate-effort;
-  }
-  return 0;
+function getDate(days){
+  return moment().add('days',days).format('YYYY-MM-DD')
+}
+
+
+function get_dev_date_range(card){
+  return {start: getDate(0), end: getDate(4) }
 }
 
 
 function get_effort(start_date){
-    var today=new Date();
-    var iterator_date= new Date(start_date);
-    var effort_spent=0;
-    while(iterator_date<=today){
-      effort_spent = (iterator_date.getDay()<=5) ? effort_spent+1 : effort_spent+0;
-      iterator_date.setDate(iterator_date.getDate()+1);
-    }
+  var today=new Date();
+  var iterator_date= new Date(start_date);
+  var effort_spent=0;
+  while(iterator_date<=today){
+    effort_spent = (iterator_date.getDay()<=5) ? effort_spent+1 : effort_spent+0;
+    iterator_date.setDate(iterator_date.getDate()+1);
+  }
   return effort_spent;
 }
