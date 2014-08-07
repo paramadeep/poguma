@@ -3,15 +3,9 @@ html
   head
     title= title
     link(rel='stylesheet', href='stylesheets/style.css')
-
-    link(rel="stylesheet",type="text/css" href="timeline/timeline.css")
-    script(type="text/javascript",src="javascripts/timeline.js")
+    link(rel="stylesheet",type="text/css" href="js/lib/vis.css")
 
   body
     block content
 
-  script(src='javascripts/d3.js')
-  script(src='javascripts/jquery_min.js')
-  script(type='text/javascript', src='javascripts/client.js')
-
-
+  script(type='text/javascript', data-main='app.js',src='js/lib/require.js')
